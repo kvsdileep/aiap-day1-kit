@@ -6,7 +6,7 @@ Version 4, 17 October 2026. Dileep delivers the international session. This is t
 
 The main session is 150 minutes before breakout, including a 5-minute break. The host runs a 15-minute context-setting slot before this. That slot is outside the 150 minutes, so do not repeat the host's logistics in the opening.
 
-Everything in the main session is instructor led. Learners practise in the final breakout. Keep chat and Q&A open during the demos.
+Everything in the main session is instructor led. Learners practise in the breakout, which the team briefs and runs. Keep chat and Q&A open during the demos.
 
 | Time | Section | Minutes |
 | --- | --- | ---: |
@@ -16,8 +16,8 @@ Everything in the main session is instructor led. Learners practise in the final
 | 01:10-01:15 | Break | 5 |
 | 01:15-01:55 | 4. Content: voice, brand and a few named skills | 40 |
 | 01:55-02:25 | 5. Spreadsheet analysis and dashboard | 30 |
-| 02:25-02:30 | 6. Review the outputs and brief the breakout | 5 |
-| From 02:30 | 7. Final breakout | Duration to set |
+| 02:25-02:30 | 6. Review and hand over to the team | 5 |
+| From 02:30 | Breakout, briefed and run by the team | Set by the team |
 
 Tools:
 
@@ -632,7 +632,7 @@ Say:
 
 We used different inputs for different work: a brand and my writing for content, a spreadsheet for analysis. The habit was the same in both. Brief properly, check against the source, then save what works.
 
-## 6. Review the outputs and brief the breakout
+## 6. Review and hand over to the team
 
 Time: 02:25-02:30, 5 minutes.
 
@@ -642,29 +642,17 @@ Let me put everything back on screen. The business review, where we checked a co
 
 Your personal instructions hold what stays true about you. A voice profile holds how you write. A skill is a recipe for a type of work. A connector is a tool that gives access.
 
-In the breakout, pick one small task. Bring back four things: your input, your request, the result, and the check you did. If something failed, show the failure and what you would try next.
-
 Optional close, if there is time:
 
 One last thing from Cranmer. He said it is better to be 50% comfortable with the newest tool than 90% comfortable with one from two years ago. That is why we keep moving fast in this program.
 
-## 7. Final breakout
-
-Starts at 02:30. Set the duration with the delivery schedule. This is the only learner activity block.
-
-| Route | Learner work | Bring back | Success check |
-| --- | --- | --- | --- |
-| Business review | Brief their own weekly report using the four ideas | First and improved brief, plus one check | One figure traces to the source |
-| Personal instructions | Continue the template interview. Add a "quiz me" line if they want one. | Instructions plus one correction | Facts match their answers. Uncovered sections stay visible. |
-| Content and voice | Use their own writing sample and a factual brief. Edit with no-ai-slop if available. | Voice observations and revised copy | Facts and voice survive the edit |
-| Data | Supplied practice spreadsheet, one decision question | A checked metric and a chart | Result reconciles to source rows |
-| Browser | Only if browser access is already set up: a small reading task on an authorised site | Source-linked brief and reading log | One point traces to an opened source |
-
-Facilitator: ask learners to pick a scope they can finish in the breakout window.
-
-Closing line:
+Close:
 
 Keep the correction you made today. If it applies again, put it into your instructions or your skill, then try it on another input.
+
+The team will now brief you on the breakout.
+
+Do: hand over to the team. The breakout activity is briefed and run by the team, not in this script.
 
 ## Completion notes
 

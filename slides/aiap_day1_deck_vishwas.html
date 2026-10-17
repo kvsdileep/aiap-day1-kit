@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<!-- Built from slides/slides.md. Runtime adapted from zarazhangrui/frontend-slides (MIT) via outskill-frontend-slides. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F5F2EA">
+  <title>AIAP Day 1 · From talking to AI to working with AI · Vishwas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================
+       OUTSKILL THEME TOKENS
+       Adapt slide-scale type within the stated ranges; keep brand colors exact.
+       ========================================================= */
+    :root {
+      --os-primary: #9CA3AF;
+      --os-secondary: #061805;
+      --os-accent: #B8EF43;
+      --os-background: #08090A;
+      --os-text-on-light: #08090A;
+      --os-text-on-dark: #FFFFFF;
+      --os-panel: #212223;
+      --os-border: #525354;
+      --os-border-soft: #6B6B6C;
+      --stage-bg: #08090A;
+      --slide-bg: #08090A;
+      --font-display: "Fira Sans", sans-serif;
+      --font-body: "Fira Sans", sans-serif;
+      --type-hero: 120px;
+      --type-heading: 64px;
+      --type-body: 36px;
+      --type-meta: 24px;
+      --slide-pad-x: 96px;
+      --slide-pad-y: 76px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* =========================================================
+       RESET
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; }
+    * { margin: 0; }
+    button, input, textarea { font: inherit; }
+
+    /* =========================================================
+       FIXED 16:9 STAGE
+       Adapted from zarazhangrui/frontend-slides (MIT).
+       Do not replace this with responsive slide reflow.
+       ========================================================= */
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--stage-bg, #000);
+    }
+
+    body {
+      color: var(--os-text-on-dark);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .deck-viewport {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: var(--stage-bg, #000);
+    }
+
+    .deck-stage {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      transform-origin: 0 0;
+      background: var(--slide-bg, #fff);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      background: var(--slide-bg, #fff);
+    }
+
+    .slide.active,
+    .slide.visible {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      z-index: 1;
+    }
+
+    img,
+    video,
+    canvas,
+    svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    /* =========================================================
+       OUTSKILL SLIDE FOUNDATION
+       ========================================================= */
+    .slide {
+      padding: var(--slide-pad-y) var(--slide-pad-x);
+      background:
+        linear-gradient(rgba(184, 239, 67, 0.032) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(184, 239, 67, 0.032) 1px, transparent 1px),
+        radial-gradient(circle at 82% 12%, rgba(184, 239, 67, 0.08), transparent 28%),
+        var(--os-background);
+      background-size: 64px 64px, 64px 64px, auto, auto;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      left: var(--slide-pad-x);
+      right: var(--slide-pad-x);
+      bottom: 54px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--os-accent) 0 12%, rgba(156, 163, 175, 0.22) 12% 100%);
+    }
+
+    .slide-inner {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-lockup {
+      width: 184px;
+      height: auto;
+    }
+
+    .eyebrow {
+      color: var(--os-accent);
+      font-size: var(--type-meta);
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    h1 { max-width: 1500px; font-size: var(--type-hero); }
+    h2 { max-width: 1420px; font-size: var(--type-heading); line-height: 1.05; }
+    h3 { font-size: 42px; line-height: 1.1; }
+
+    p, li {
+      color: var(--os-primary);
+      font-size: var(--type-body);
+      line-height: 1.42;
+    }
+
+    strong { color: var(--os-text-on-dark); font-weight: 700; }
+    .accent { color: var(--os-accent); }
+
+    .slide-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 36px;
+      color: var(--os-primary);
+      font-size: var(--type-meta);
+      letter-spacing: 0.04em;
+    }
+
+    .slide-number {
+      color: var(--os-accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .title-layout {
+      justify-content: space-between;
+      padding-bottom: 88px;
+    }
+
+    .title-copy {
+      display: grid;
+      gap: 32px;
+      align-content: center;
+      max-width: 1540px;
+      flex: 1;
+    }
+
+    .title-copy p { max-width: 1060px; font-size: 42px; }
+
+    .title-meta {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--os-primary);
+      font-size: var(--type-meta);
+    }
+
+    .title-meta::before {
+      content: "";
+      width: 92px;
+      height: 6px;
+      background: var(--os-accent);
+    }
+
+    .content-layout {
+      gap: 54px;
+      padding-bottom: 78px;
+    }
+
+    .content-header {
+      display: grid;
+      gap: 18px;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      min-height: 0;
+      flex: 1;
+    }
+
+    .panel {
+      position: relative;
+      min-width: 0;
+      overflow: hidden;
+      padding: 46px;
+      border: 1px solid var(--os-border);
+      border-radius: 2px;
+      background: rgba(33, 34, 35, 0.78);
+    }
+
+    .panel--green {
+      border-color: rgba(184, 239, 67, 0.32);
+      background: var(--os-secondary);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 8px;
+      height: 100%;
+      background: var(--os-primary);
+    }
+
+    .panel--green::before { background: var(--os-accent); }
+    .panel h3 { margin-bottom: 26px; }
+    .panel p { max-width: 680px; }
+
+    .step-list {
+      display: grid;
+      gap: 22px;
+      margin-top: 28px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .step-list li {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .step-list span {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--os-border-soft);
+      border-radius: 2px;
+      color: var(--os-accent);
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .closing-layout {
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+      padding-bottom: 82px;
+    }
+
+    .closing-layout h2 { max-width: 1320px; font-size: 96px; }
+
+    .primary-action {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      min-height: 72px;
+      padding: 18px 28px;
+      border: 1px solid var(--os-border);
+      border-radius: 2px;
+      background: var(--os-accent);
+      color: #000;
+      font-size: 28px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    /* =========================================================
+       SELECTABLE OUTSKILL DESIGN FAMILIES
+       Keep classic-dark as the default. Change data-theme on <body>
+       only when the brief or reference calls for another family.
+       ========================================================= */
+    body[data-theme="intl-workshop"] {
+      --os-primary: #61675E;
+      --os-secondary: #DDE8D5;
+      --os-accent: #B8EF43;
+      --os-background: #F5F2EA;
+      --os-text-on-light: #0B0E0B;
+      --os-text-on-dark: #0B0E0B;
+      --os-panel: #F0EEE7;
+      --os-border: #D6D2C8;
+      --os-border-soft: #B9C8B3;
+      --stage-bg: #DDD9CF;
+      --slide-bg: #F5F2EA;
+      --type-hero: 104px;
+      --type-heading: 66px;
+      --type-body: 34px;
+      --type-meta: 20px;
+    }
+
+    body[data-theme="intl-workshop"] .slide {
+      color: #0B0E0B;
+      background:
+        radial-gradient(circle at 88% 14%, rgba(184, 239, 67, 0.07), transparent 23%),
+        #F5F2EA;
+      box-shadow: inset 0 0 0 1px #DDD9CF;
+    }
+
+    body[data-theme="intl-workshop"] .slide::after {
+      left: var(--slide-pad-x);
+      right: var(--slide-pad-x);
+      bottom: 34px;
+      height: 1px;
+      background: #DDD9CF;
+    }
+
+    body[data-theme="intl-workshop"] .brand-lockup { filter: invert(1); }
+    body[data-theme="intl-workshop"] strong { color: #0B0E0B; }
+    body[data-theme="intl-workshop"] .accent { color: #0B6B0B; }
+    body[data-theme="intl-workshop"] .eyebrow { color: #0B6B0B; }
+    body[data-theme="intl-workshop"] .slide-kicker { color: #61675E; }
+    body[data-theme="intl-workshop"] .slide-number { color: #0B6B0B; }
+    body[data-theme="intl-workshop"] .title-meta { color: #61675E; }
+    body[data-theme="intl-workshop"] .panel {
+      border-color: #D6D2C8;
+      background: rgba(240, 238, 231, 0.9);
+    }
+    body[data-theme="intl-workshop"] .panel--green {
+      border-color: #B9C8B3;
+      background: #DDE8D5;
+    }
+    body[data-theme="intl-workshop"] .panel::before { background: #B9C8B3; }
+    body[data-theme="intl-workshop"] .panel--green::before { background: #0B6B0B; }
+    body[data-theme="intl-workshop"] .step-list span {
+      border-color: #B9C8B3;
+      color: #0B6B0B;
+    }
+
+    body[data-theme="intl-offer"] {
+      --os-primary: #9AA398;
+      --os-secondary: #123B13;
+      --os-accent: #B8EF43;
+      --os-background: #080B09;
+      --os-text-on-light: #080B09;
+      --os-text-on-dark: #F7FAF3;
+      --os-panel: #101510;
+      --os-border: #263226;
+      --os-border-soft: #3C4B3C;
+      --stage-bg: #050705;
+      --slide-bg: #080B09;
+      --type-hero: 112px;
+      --type-heading: 64px;
+      --type-body: 34px;
+      --type-meta: 20px;
+    }
+
+    body[data-theme="intl-offer"] .slide,
+    body[data-theme="intl-workshop"] .slide.offer-dark {
+      --os-primary: #9AA398;
+      --os-secondary: #123B13;
+      --os-text-on-dark: #F7FAF3;
+      --os-panel: #101510;
+      --os-border: #263226;
+      --os-border-soft: #3C4B3C;
+      color: #F7FAF3;
+      background:
+        radial-gradient(circle at 74% 20%, rgba(184, 239, 67, 0.10), transparent 28%),
+        linear-gradient(135deg, rgba(18, 59, 19, 0.12), transparent 48%),
+        #080B09;
+      box-shadow: none;
+    }
+
+    body[data-theme="intl-offer"] .slide::after,
+    body[data-theme="intl-workshop"] .slide.offer-dark::after {
+      background: linear-gradient(90deg, rgba(184, 239, 67, 0.42), rgba(38, 50, 38, 0.6));
+    }
+
+    body[data-theme="intl-offer"] .brand-lockup,
+    body[data-theme="intl-workshop"] .slide.offer-dark .brand-lockup { filter: none; }
+
+    body[data-theme="intl-offer"] strong,
+    body[data-theme="intl-workshop"] .slide.offer-dark strong { color: #F7FAF3; }
+
+    body[data-theme="intl-offer"] .accent,
+    body[data-theme="intl-workshop"] .slide.offer-dark .accent { color: #B8EF43; }
+
+    body[data-theme="intl-offer"] .eyebrow,
+    body[data-theme="intl-workshop"] .slide.offer-dark .eyebrow { color: #B8EF43; }
+
+    body[data-theme="intl-offer"] .slide-kicker,
+    body[data-theme="intl-workshop"] .slide.offer-dark .slide-kicker { color: #9AA398; }
+
+    body[data-theme="intl-offer"] .panel,
+    body[data-theme="intl-workshop"] .slide.offer-dark .panel {
+      border-color: #263226;
+      background: rgba(16, 21, 16, 0.92);
+    }
+
+    /* International workshop authoring primitives */
+    .marker {
+      padding: 0 0.08em 0.02em;
+      color: #0B0E0B;
+      background: var(--os-accent);
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .intl-watermark {
+      position: absolute;
+      right: 68px;
+      bottom: 34px;
+      z-index: 0;
+      color: #E3EBD9;
+      font-size: 230px;
+      font-weight: 700;
+      line-height: 0.8;
+      letter-spacing: -0.08em;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .offer-dark .intl-watermark,
+    body[data-theme="intl-offer"] .intl-watermark {
+      color: rgba(184, 239, 67, 0.12);
+    }
+
+    .intl-icon-tile {
+      display: grid;
+      place-items: center;
+      width: 156px;
+      height: 156px;
+      border: 1px solid #C7D5C0;
+      border-radius: 12px;
+      background: #DDE8D5;
+      color: #0B6B0B;
+      box-shadow: 0 18px 52px rgba(11, 107, 11, 0.12);
+    }
+
+    .intl-icon-tile svg {
+      width: 74px;
+      height: 74px;
+      stroke: currentColor;
+    }
+
+    .intl-statement-layout {
+      align-items: flex-start;
+      justify-content: center;
+      max-width: 1520px;
+      padding-bottom: 78px;
+    }
+
+    .intl-statement-layout h1,
+    .intl-statement-layout h2 {
+      max-width: 1500px;
+      font-size: 86px;
+      line-height: 1.01;
+    }
+
+    .intl-demo-layout {
+      display: grid;
+      grid-template-columns: 330px minmax(0, 1fr);
+      gap: 74px;
+      align-items: center;
+      padding-bottom: 78px;
+    }
+
+    .intl-demo-copy {
+      display: grid;
+      gap: 22px;
+      max-width: 1120px;
+    }
+
+    .intl-demo-copy h2 { font-size: 74px; }
+
+    .intl-proof-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(480px, 1.1fr);
+      gap: 76px;
+      align-items: center;
+      padding-bottom: 78px;
+    }
+
+    .intl-proof-layout figure {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid #D6D2C8;
+      border-radius: 10px;
+      background: #FFF;
+      box-shadow: 0 22px 60px rgba(11, 14, 11, 0.13);
+    }
+
+    .intl-proof-layout figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .intl-recap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 54px;
+      margin-top: 36px;
+      border-top: 1px solid #D6D2C8;
+    }
+
+    .intl-recap-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 16px;
+      align-items: center;
+      min-height: 72px;
+      border-bottom: 1px solid #D6D2C8;
+      color: #0B0E0B;
+      font-size: 28px;
+    }
+
+    .intl-recap-item::before {
+      content: "●";
+      color: #0B6B0B;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .intl-scale {
+      display: grid;
+      grid-template-columns: repeat(10, 72px);
+      gap: 14px;
+      margin-top: 42px;
+    }
+
+    .intl-scale span {
+      display: grid;
+      place-items: center;
+      height: 64px;
+      border: 1px solid #D6D2C8;
+      border-radius: 8px;
+      background: #F0EEE7;
+      color: #0B0E0B;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .intl-scale span.active {
+      border-color: var(--os-accent);
+      background: var(--os-accent);
+    }
+
+    .offer-grid {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 72px;
+      align-items: center;
+      min-height: 0;
+      flex: 1;
+    }
+
+    .offer-panel {
+      min-width: 0;
+      padding: 38px;
+      border: 1px solid #263226;
+      border-radius: 10px;
+      background: rgba(16, 21, 16, 0.94);
+    }
+
+    .offer-price {
+      color: var(--os-accent);
+      font-size: 150px;
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.06em;
+    }
+
+
+    /* =========================================================
+       AIAP DAY 1 LAYOUTS (intl-workshop)
+       ========================================================= */
+    body[data-theme="intl-workshop"] h1, body[data-theme="intl-workshop"] h2 { color:#0B0E0B; }
+    .eyebrow { margin-bottom: 30px; }
+    .statement-layout { justify-content: center; padding-bottom: 90px; }
+    .statement-layout.has-icon { flex-direction: row; align-items: center; justify-content: space-between; gap: 80px; }
+    .statement-copy { max-width: 1520px; position: relative; z-index: 2; }
+    .statement-layout h2 { font-size: 84px; line-height: 1.04; max-width: 1500px; }
+    .statement-layout.has-icon h2 { max-width: 1300px; }
+    .statement-layout.tool h2 { font-size: 150px; letter-spacing: -0.04em; }
+    .support { margin-top: 40px; max-width: 1350px; font-size: 38px; color: #61675E; line-height: 1.35; }
+    .meta { margin-top: 26px; font-size: 30px; color: #0B6B0B; font-weight: 600; }
+    .source { position: absolute; left: 0; bottom: 6px; font-size: 22px; color: #61675E; max-width: 1400px; }
+    .bullets { margin-top: 40px; padding: 0; list-style: none; display: grid; gap: 18px; }
+    .bullets li { font-size: 38px; color: #0B0E0B; padding-left: 40px; position: relative; }
+    .bullets li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 16px; height: 16px; background: #0B6B0B; border-radius: 3px; }
+    .quote-mark { position: absolute; left: -10px; top: -150px; font-size: 300px; line-height: 1; color: #DDE8D5; font-weight: 800; z-index: -1; }
+    .list-layout { justify-content: center; padding-bottom: 90px; }
+    .list-layout h2 { font-size: 68px; max-width: 1500px; }
+    .rows { margin-top: 44px; padding: 0; list-style: none; border-top: 1px solid #D6D2C8; max-width: 1560px; }
+    .row { display: grid; grid-template-columns: 300px 1fr; gap: 36px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid #D6D2C8; }
+    .row--plain { grid-template-columns: 1fr; padding-left: 52px; position: relative; }
+    .row--plain::before { content: ""; position: absolute; left: 6px; top: 50%; width: 16px; height: 16px; margin-top: -8px; background: #0B6B0B; border-radius: 3px; }
+    .row-k { font-size: 34px; font-weight: 700; color: #0B6B0B; }
+    .row-v { font-size: 36px; color: #0B0E0B; line-height: 1.3; }
+    .compare-layout { justify-content: center; padding-bottom: 90px; }
+    .compare-layout h2 { font-size: 66px; margin-bottom: 50px; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 10px; }
+    .col { padding: 56px 52px; border-radius: 12px; border: 1px solid #D6D2C8; background: #F0EEE7; min-height: 420px; display: flex; flex-direction: column; gap: 26px; }
+    .col--new { background: #DDE8D5; border-color: #B9C8B3; }
+    .col-k { font-size: 26px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #61675E; }
+    .col--new .col-k { color: #0B6B0B; }
+    .col-v { font-size: 58px; font-weight: 700; line-height: 1.1; color: #0B0E0B; letter-spacing: -0.02em; }
+    .title-copy h1 { font-size: 112px; line-height: 1.0; }
+    .title-copy p.support { font-size: 40px; max-width: 1200px; }
+    .closing-layout h2 { font-size: 88px; line-height: 1.05; max-width: 1500px; }
+    .slide.visible .reveal:nth-child(5) { transition-delay: 290ms; }
+    .slide.visible .reveal:nth-child(6) { transition-delay: 360ms; }
+
+    /* Presenter notes panel (press N). Outside the stage, for rehearsal. */
+    .notes-panel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1003; max-height: 38vh; overflow: auto; padding: 18px 28px 64px; background: rgba(11,14,11,0.94); color: #F7FAF3; font: 16px/1.5 "Fira Sans", sans-serif; white-space: pre-wrap; display: none; }
+    .notes-panel.show { display: block; }
+
+    /* =========================================================
+       ENTRANCE MOTION
+       ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity 520ms var(--ease-out),
+        transform 520ms var(--ease-out);
+    }
+
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.visible .reveal:nth-child(2) { transition-delay: 80ms; }
+    .slide.visible .reveal:nth-child(3) { transition-delay: 150ms; }
+    .slide.visible .reveal:nth-child(4) { transition-delay: 220ms; }
+
+    /* =========================================================
+       CONTROLS OUTSIDE THE STAGE
+       ========================================================= */
+    .deck-controls {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      transform: translateX(-50%);
+      border: 1px solid var(--os-border);
+      border-radius: 4px;
+      background: rgba(33, 34, 35, 0.94);
+      opacity: 0.18;
+      transition: opacity 200ms ease;
+    }
+
+    .deck-controls:hover,
+    .deck-controls:focus-within { opacity: 1; }
+
+    .deck-controls button {
+      min-width: 46px;
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--os-border-soft);
+      border-radius: 4px;
+      background: var(--os-panel);
+      color: var(--os-text-on-dark);
+      cursor: pointer;
+    }
+
+    .deck-controls button:hover,
+    .deck-controls button:focus-visible {
+      outline: none;
+      border-color: var(--os-accent);
+      color: var(--os-accent);
+    }
+
+    .page-indicator {
+      min-width: 84px;
+      color: var(--os-primary);
+      text-align: center;
+      font-size: 15px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .deck-progress {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 1002;
+      width: 0;
+      height: 3px;
+      background: var(--os-accent);
+      transition: width 280ms var(--ease-out);
+    }
+
+    /* =========================================================
+       INLINE EDITING
+       ========================================================= */
+    .edit-hotzone {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 10000;
+      width: 80px;
+      height: 80px;
+      cursor: pointer;
+    }
+
+    .edit-toggle {
+      position: fixed;
+      left: 18px;
+      top: 18px;
+      z-index: 10001;
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--os-border-soft);
+      border-radius: 4px;
+      background: var(--os-panel);
+      color: var(--os-text-on-dark);
+      opacity: 0;
+      pointer-events: none;
+      cursor: pointer;
+      transition: opacity 200ms ease;
+    }
+
+    .edit-toggle.show,
+    .edit-toggle.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .editing [data-editable] {
+      outline: 2px dashed var(--os-accent);
+      outline-offset: 5px;
+      cursor: text;
+    }
+
+    /* =========================================================
+       PRINT AND REDUCED MOTION
+       ========================================================= */
+    @media print {
+      html, body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .deck-viewport { position: static; overflow: visible; background: #fff; }
+      .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+
+      .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+      }
+
+      .slide:last-child { break-after: auto; page-break-after: auto; }
+      .deck-controls, .deck-progress, .edit-hotzone, .edit-toggle { display: none !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+    }
+  </style>
+</head>
+
+<body data-deck-key="aiap-day1-vishwas" data-theme="intl-workshop">
+  <div class="deck-progress" id="deckProgress" aria-hidden="true"></div>
+
+  <div class="deck-viewport">
+    <main class="deck-stage" id="deckStage" aria-live="polite">
+
+      <!-- Slide 1: Title -->
+      <section class="slide active visible" aria-label="Slide 1 of 66" data-notes="&quot;Hi everyone. I am Dileep. Welcome to day one.&quot;
+
+VISHWAS: Say &quot;I am Vishwas.&quot;
+
+Host has already done context setting. Do not repeat logistics.">
+        <div class="slide-inner title-layout">
+  <img class="brand-lockup reveal" src="outskill-logo.svg" alt="Outskill">
+  <div class="title-copy"><p class="eyebrow reveal" data-editable>AI ACCELERATOR · DAY 1</p><h1 class="reveal" data-editable>From talking to AI to <span class="marker">working with AI</span></h1><p class="support reveal" data-editable>Today your AI learns to take a proper brief, know who you are, reach your apps and save what works.</p></div>
+  <div class="title-meta reveal" data-editable>Vishwas · Outskill</div></div>
+      </section>
+      <!-- Slide 2: Agenda -->
+      <section class="slide" aria-label="Slide 2 of 66" data-notes="&quot;Today you will see how to brief AI properly, how to make it know you, how to connect it to your apps, and then how to use skills for content and data. Watch what I ask, what comes back and what I check. Questions go in the Q&amp;A.&quot;
+
+Reveal one line per click. Co-mentors pick up questions from the Q&amp;A.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>AGENDA</p><h2 class="reveal" data-editable>Here is how we will spend the next two and a half hours</h2>
+  <ul class="rows"><li class="row row--plain reveal"><span class="row-v" data-editable>Brief AI properly and make it know you</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Connect your apps and save what works as a skill</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Let AI work inside a site you log into</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Make content in your voice and your brand</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Turn a spreadsheet into a dashboard</span></li></ul></div><div class="intl-watermark" aria-hidden="true">02</div>
+      </section>
+      <!-- Slide 3: Everybody has AI -->
+      <section class="slide" aria-label="Slide 3 of 66" data-notes="&quot;So one thing I want you to understand first. Everybody has AI now.&quot;
+
+Pause after the line.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>FIRST THING</p><h2 class="reveal" data-editable>Everybody has <span class="marker">AI</span> now.</h2></div></div><div class="intl-watermark" aria-hidden="true">03</div>
+      </section>
+      <!-- Slide 4: Same tools -->
+      <section class="slide" aria-label="Slide 4 of 66" data-notes="&quot;A couple of years back, using AI made you stand out. Now everyone has the same tools.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>A couple of years back, using AI made you stand out. Now <span class="marker">everyone has the same tools</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">04</div>
+      </section>
+      <!-- Slide 5: Pulled to the average -->
+      <section class="slide" aria-label="Slide 5 of 66" data-notes="&quot;Miles Cranmer, an assistant professor who works on AI for science, made this point in a talk recently. If you use AI the default way, your work gets better, but it starts looking like everyone else&#x27;s. He said this year all the student presentations he assessed looked the same, down to the font and the colours.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Use it the default way, and your work gets better. But it starts looking like <span class="marker">everyone else's</span>.</h2></div><p class="source reveal" data-editable>Source: Miles Cranmer, talk on using AI without brain rot, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">05</div>
+      </section>
+      <!-- Slide 6: Stories got similar -->
+      <section class="slide" aria-label="Slide 6 of 66" data-notes="&quot;There is research behind this. Writers who got story ideas from AI wrote stories that were rated more novel. But the stories also became more similar to each other. Better on average, but the same.&quot;
+
+Quote no number from this study until it is verified.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>RESEARCH</p><h2 class="reveal" data-editable>Writers with AI ideas wrote more novel stories. The stories also became <span class="marker">more similar to each other</span>.</h2></div><p class="source reveal" data-editable>Source: Doshi and Hauser, Science Advances, 2024</p></div><div class="intl-watermark" aria-hidden="true">06</div>
+      </section>
+      <!-- Slide 7: Beyond the default -->
+      <section class="slide" aria-label="Slide 7 of 66" data-notes="&quot;So today is about using it beyond the default.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>So today is about using AI <span class="marker">beyond the default</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">07</div>
+      </section>
+      <!-- Slide 8: Four words from Felix -->
+      <section class="slide" aria-label="Slide 8 of 66" data-notes="&quot;For that I will use an article by Felix Rieseberg, who works at Anthropic. He gives four words: speed, altitude, depth and range. I will point to each one as we go.&quot;
+
+Point back to each word as it comes up in a demo.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>FOUR WAYS TO ASK MORE OF AI</p><h2 class="reveal" data-editable>Felix Rieseberg at Anthropic gives us <span class="marker">four words</span> for this</h2>
+  <ul class="rows"><li class="row reveal"><span class="row-k" data-editable>Speed</span><span class="row-v" data-editable>Can I do the same work faster?</span></li><li class="row reveal"><span class="row-k" data-editable>Altitude</span><span class="row-v" data-editable>What should this work help someone decide?</span></li><li class="row reveal"><span class="row-k" data-editable>Depth</span><span class="row-v" data-editable>Would an expert trust how this was done?</span></li><li class="row reveal"><span class="row-k" data-editable>Range</span><span class="row-v" data-editable>What would another field check?</span></li></ul><p class="source reveal" data-editable>Source: Felix Rieseberg, "How to be more ambitious", 13 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">08</div>
+      </section>
+      <!-- Slide 9: Monday morning scenario -->
+      <section class="slide" aria-label="Slide 9 of 66" data-notes="&quot;Let me start the way most of us start on a Monday. I have notes, some figures and last week&#x27;s review.&quot;
+
+No tool name on this slide.
+
+DEMO, on your screen, not on a slide: Ask for the Monday review with the starting prompt (script 1.2). Let it finish. Do not call it a failure before you read it. While it runs, say: &quot;I just ask for the review.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>It is Monday morning. You have notes, some figures and last week's review. Your manager <span class="marker">wants the review</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">09</div>
+      </section>
+      <!-- Slide 10: Speed vs altitude -->
+      <section class="slide" aria-label="Slide 10 of 66" data-notes="&quot;Okay, this is a decent first draft. Speed asks how I do the same review faster. Altitude asks a different question. What should my manager decide after reading this? And should the review even look like this?&quot;
+
+None.">
+        <div class="slide-inner compare-layout"><p class="eyebrow reveal" data-editable>ALTITUDE</p>
+  <div class="compare"><article class="col col--old reveal"><p class="col-k" data-editable>Speed</p><p class="col-v" data-editable>How do I do this review faster?</p></article><article class="col col--new reveal"><p class="col-k" data-editable>Altitude</p><p class="col-v" data-editable>What should my manager <span class="marker">decide</span> after reading it?</p></article></div></div>
+      </section>
+      <!-- Slide 11: Doctor&#x27;s case file -->
+      <section class="slide" aria-label="Slide 11 of 66" data-notes="&quot;Think of a doctor. A good doctor does not prescribe from one line. They read the case file: your history, your allergies, what you have tried already. And they ask you questions.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>ANALOGY</p><h2 class="reveal" data-editable>A good doctor does not prescribe from one line. They read the <span class="marker">case file</span> first.</h2><p class="support reveal" data-editable>Your history, your allergies, what you have tried already. And they ask you questions.</p></div></div><div class="intl-watermark" aria-hidden="true">11</div>
+      </section>
+      <!-- Slide 12: Brief -->
+      <section class="slide" aria-label="Slide 12 of 66" data-notes="&quot;So I will move from a prompt to a brief. Who reads this, what they need to decide, and last week&#x27;s review as the format.&quot;
+
+DEMO, on your screen, not on a slide: Run the improved brief (script 1.2). Point to the section that now asks the manager for a decision. While it runs, say: &quot;Same notes, same figures. Now with a proper brief.&quot;">
+        <div class="slide-inner statement-layout  has-icon">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>NEW WORD</p><h2 class="reveal" data-editable>Brief = who reads it, what they decide, and <span class="marker">what good looks like</span></h2></div><div class="intl-icon-tile reveal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M8 12h8M8 15h5"/></svg></div></div><div class="intl-watermark" aria-hidden="true">12</div>
+      </section>
+      <!-- Slide 13: Only the ask changed -->
+      <section class="slide" aria-label="Slide 13 of 66" data-notes="&quot;The only thing that changed is what I asked for. One more thought. Could a weekly check catch these issues before Monday? I think it is worth testing. We will not build that today.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>The only thing that changed is <span class="marker">what I asked for</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">13</div>
+      </section>
+      <!-- Slide 14: Depth -->
+      <section class="slide" aria-label="Slide 14 of 66" data-notes="&quot;Depth is about doing the work the way an expert would. An analyst would not trust the summary notes. They would open the figures.&quot;
+
+DEMO, on your screen, not on a slide: Open the underlying figures and check one conclusion (script 1.3). If the data does not support it, say so. While it runs, say: &quot;So let me check one conclusion against the numbers.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>DEPTH</p><h2 class="reveal" data-editable>Depth = doing the work the way an <span class="marker">expert</span> would</h2><p class="support reveal" data-editable>An analyst would not trust the summary notes. They would open the figures.</p></div></div><div class="intl-watermark" aria-hidden="true">14</div>
+      </section>
+      <!-- Slide 15: You own it (setup) -->
+      <section class="slide" aria-label="Slide 15 of 66" data-notes="&quot;See, why do I bother? Cranmer put it simply. You are 100% responsible for anything AI generates.&quot;
+
+Reveal pair with the next slide. Click on the second line.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You are 100% responsible for anything AI generates...</h2></div></div><div class="intl-watermark" aria-hidden="true">15</div>
+      </section>
+      <!-- Slide 16: You own it (payoff) -->
+      <section class="slide" aria-label="Slide 16 of 66" data-notes="&quot;AI cannot go to jail. If I send this to my manager and the number is wrong, the mistake is mine.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You are 100% responsible for anything AI generates. AI <span class="marker">cannot go to jail</span>.</h2></div><p class="source reveal" data-editable>Source: Miles Cranmer, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">16</div>
+      </section>
+      <!-- Slide 17: The 14-hour run -->
+      <section class="slide" aria-label="Slide 17 of 66" data-notes="&quot;He had a story on this. He let an AI agent run on a research task for 14 hours. It came back and said every goal was met. He looked at the output and it was garbage. The agent was very confident. Only someone who knew the area could tell.&quot;
+
+DEMO, on your screen, not on a slide: Run the prompt-improvement pass (script 1.3). Naming a role like &quot;analyst&quot; does not mean the analysis happened. While it runs, say: &quot;So before I ask for more, I want AI to tell me what analysis is missing and how I would check it. Then I decide if it is worth doing.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>An AI agent ran for 14 hours, said every goal was met, and the output was <span class="marker">garbage</span>.</h2><p class="support reveal" data-editable>Only someone who knew the area could tell.</p></div><p class="source reveal" data-editable>Source: Miles Cranmer, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">17</div>
+      </section>
+      <!-- Slide 18: Start fresh -->
+      <section class="slide" aria-label="Slide 18 of 66" data-notes="&quot;One quick habit. When a conversation keeps going back to an old mistake, or the task has changed a lot, start a fresh chat. Mike Taylor at Every wrote that he starts a new thread every time. I would not make that a rule, but the idea is right. So I ask for a handoff, I read it, and I start fresh.&quot;
+
+Show the handoff prompt. If the live thread is fine, use a prepared drifting thread and say it is prepared.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>QUICK HABIT</p><h2 class="reveal" data-editable>When a chat keeps going back to an old mistake, <span class="marker">start a fresh chat</span>.</h2><p class="support reveal" data-editable>Ask for a handoff, read it, then open a new chat.</p></div><p class="source reveal" data-editable>Source: Mike Taylor, Every, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">18</div>
+      </section>
+      <!-- Slide 19: Range -->
+      <section class="slide" aria-label="Slide 19 of 66" data-notes="&quot;Range means borrowing from other fields. On the same review, I want an analyst to check the figures, a journalist to question the evidence, and an editor to make the ask clear. Then we see which checks actually help.&quot;
+
+Run the Range prompt. Accept one useful change and reject one the evidence does not support.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>RANGE</p><h2 class="reveal" data-editable>Ask three people from different fields to <span class="marker">check</span> the same draft</h2>
+  <ul class="rows"><li class="row reveal"><span class="row-k" data-editable>Analyst</span><span class="row-v" data-editable>Do the figures match the source?</span></li><li class="row reveal"><span class="row-k" data-editable>Journalist</span><span class="row-v" data-editable>What is the evidence behind each explanation?</span></li><li class="row reveal"><span class="row-k" data-editable>Editor</span><span class="row-v" data-editable>Is the decision request clear?</span></li></ul></div><div class="intl-watermark" aria-hidden="true">19</div>
+      </section>
+      <!-- Slide 20: Check-in -->
+      <section class="slide" aria-label="Slide 20 of 66" data-notes="&quot;Which of the four words do you skip the most? Put it in the chat.&quot;
+
+Read out a few answers. Keep it to one minute.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Which of the four words do you <span class="marker">skip the most</span>?</h2><p class="support reveal" data-editable>Speed, altitude, depth or range. Drop it in the chat.</p></div></div><div class="intl-watermark" aria-hidden="true">20</div>
+      </section>
+      <!-- Slide 21: Make AI know you -->
+      <section class="slide" aria-label="Slide 21 of 66" data-notes="&quot;Now you might be wondering, how do I make AI know me, so I do not repeat all this every time?&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>How do you make AI know you, so you <span class="marker">stop repeating yourself</span> every time?</h2></div></div><div class="intl-watermark" aria-hidden="true">21</div>
+      </section>
+      <!-- Slide 22: Custom instructions -->
+      <section class="slide" aria-label="Slide 22 of 66" data-notes="&quot;That is custom instructions. It took me almost 9 months of iteration to get mine to this point. You do not need 9 months. I will give you a very simple recipe.&quot;
+
+VISHWAS: Say &quot;Dileep, who built this template, took almost 9 months of iteration to get his instructions to this point.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  has-icon">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>NEW WORD</p><h2 class="reveal" data-editable>Custom instructions = what stays true about you, <span class="marker">saved once</span></h2></div><div class="intl-icon-tile reveal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div></div><div class="intl-watermark" aria-hidden="true">22</div>
+      </section>
+      <!-- Slide 23: Quiz me -->
+      <section class="slide" aria-label="Slide 23 of 66" data-notes="&quot;This line is in my instructions for a reason.&quot;
+
+Show your saved instructions for a few seconds and point to this line. Add it to your instructions before class.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><div class="quote-mark" aria-hidden="true">&ldquo;</div><p class="eyebrow reveal" data-editable>ONE LINE IN MY INSTRUCTIONS</p><h2 class="reveal" data-editable>"When I am learning something new, <span class="marker">quiz me</span> one question at a time."</h2><p class="support reveal" data-editable>Give hints when I am stuck. Do not give me the answer unless I ask.</p></div></div><div class="intl-watermark" aria-hidden="true">23</div>
+      </section>
+      <!-- Slide 24: The maths study -->
+      <section class="slide" aria-label="Slide 24 of 66" data-notes="&quot;There is a study from Turkey with about a thousand high school maths students. The group with plain ChatGPT did much better on practice problems. Then AI was taken away for the exam, and they did 17% worse than students who never had it. A second group had a version that gave only hints. They did about the same as the no-AI group.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>RESEARCH</p><h2 class="reveal" data-editable>Students with plain ChatGPT did better in practice, then scored <span class="marker">17% lower</span> on the exam without it.</h2><p class="support reveal" data-editable>Students with a hint-only tutor scored about the same as students with no AI.</p></div><p class="source reveal" data-editable>Source: Bastani et al., PNAS 2025. About 1,000 high school students, Turkey.</p></div><div class="intl-watermark" aria-hidden="true">24</div>
+      </section>
+      <!-- Slide 25: The coding study -->
+      <section class="slide" aria-label="Slide 25 of 66" data-notes="&quot;Anthropic found something similar with engineers learning a new coding library. The ones who asked AI to explain things scored much better on the quiz than the ones who just asked it for the code.&quot;
+
+Say &quot;scored better&quot;, not &quot;learned&quot;. Small study, 52 engineers, and the usage finding is not causal.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Engineers who asked AI to explain scored better than the ones who asked it <span class="marker">for the code</span>.</h2></div><p class="source reveal" data-editable>Source: Anthropic, "How AI assistance impacts the formation of coding skills", 29 Jan 2026</p></div><div class="intl-watermark" aria-hidden="true">25</div>
+      </section>
+      <!-- Slide 26: When learning is the point -->
+      <section class="slide" aria-label="Slide 26 of 66" data-notes="&quot;So when the output is the point, let AI do the work. When learning is the point, make it quiz you. You are in a 14-day program. Learning is the point.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Let AI do the work when the output matters. Make it <span class="marker">quiz you</span> when learning matters.</h2></div></div><div class="intl-watermark" aria-hidden="true">26</div>
+      </section>
+      <!-- Slide 27: Template interview -->
+      <section class="slide" aria-label="Slide 27 of 66" data-notes="&quot;This is the operating instructions template. It has 12 sections. You do not fill it by hand. You paste it into a new chat and AI interviews you, one section at a time. Priya in the filled example is fictional. Your answers are what make it yours.&quot;
+
+DEMO, on your screen, not on a slide: Share the template link and paste it into a new chat. Answer two rounds as yourself, then use the stop prompt (script 1.5).">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You do not fill this by hand. <span class="marker">AI interviews you</span>, one section at a time.</h2></div></div><div class="intl-watermark" aria-hidden="true">27</div>
+      </section>
+      <!-- Slide 28: Instructions vs brief -->
+      <section class="slide" aria-label="Slide 28 of 66" data-notes="&quot;Before I save this, I read it. Did it capture what I said? Did it add something I never said? Anything about this week&#x27;s review stays in this week&#x27;s brief. Instructions are for things that stay true for months.&quot;
+
+Correct one unsupported detail. Show where to save it and say the menu path aloud. If settings cannot be reached, show the prepared screenshot.">
+        <div class="slide-inner compare-layout"><p class="eyebrow reveal" data-editable>WHAT GOES WHERE</p>
+  <div class="compare"><article class="col col--old reveal"><p class="col-k" data-editable>Instructions</p><p class="col-v" data-editable>what stays true about you for months</p></article><article class="col col--new reveal"><p class="col-k" data-editable>Brief</p><p class="col-v" data-editable>what belongs to <span class="marker">this task</span></p></article></div></div>
+      </section>
+      <!-- Slide 29: Recap -->
+      <section class="slide" aria-label="Slide 29 of 66" data-notes="&quot;Quick recap. One, start from what the reader needs to decide, not from the task. Two, check one thing against the source before you trust it, because you own the output. Three, what stays true about you goes into instructions. What belongs to this task stays in the brief. Next, we give AI tools.&quot;
+
+None.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>QUICK RECAP</p><h2 class="reveal" data-editable>Before we give AI tools, <span class="marker">three things</span> to keep</h2>
+  <ul class="rows"><li class="row row--plain reveal"><span class="row-v" data-editable>Start from what the reader needs to decide</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Check one thing against the source, because you own the output</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Put what stays true about you in instructions, and the task in the brief</span></li></ul></div><div class="intl-watermark" aria-hidden="true">29</div>
+      </section>
+      <!-- Slide 30: The chef -->
+      <section class="slide" aria-label="Slide 30 of 66" data-notes="&quot;So think about this. I am in a restaurant, I have a chef. The chef needs tools: an oven, a wok, a stove. And the chef needs recipes, the instructions to prepare a dish.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>ANALOGY</p><h2 class="reveal" data-editable>I am in a restaurant. I have a chef. The chef needs <span class="marker">tools and recipes</span>.</h2><p class="support reveal" data-editable>An oven, a wok, a stove. And the instructions to prepare a dish.</p></div></div><div class="intl-watermark" aria-hidden="true">30</div>
+      </section>
+      <!-- Slide 31: Tools but no recipe -->
+      <section class="slide" aria-label="Slide 31 of 66" data-notes="&quot;Now the chef has tools but no recipe. What happens? Put it in the chat.&quot;
+
+Read two or three chat answers.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>The chef has tools but no recipe. <span class="marker">What happens?</span></h2><p class="support reveal" data-editable>Drop it in the chat.</p></div></div><div class="intl-watermark" aria-hidden="true">31</div>
+      </section>
+      <!-- Slide 32: Recipe but no tools -->
+      <section class="slide" aria-label="Slide 32 of 66" data-notes="&quot;Now the opposite. A recipe but no tools. Nothing comes out. The chef comes back and says, I do not have an oven, but here is step 1, step 2, step 3. You have seen AI do this, right?&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>A recipe but no tools, and the chef hands you <span class="marker">steps on paper</span>.</h2><p class="support reveal" data-editable>"I cannot do this, but here is step 1, step 2, step 3." You have seen AI do this, right?</p></div></div><div class="intl-watermark" aria-hidden="true">32</div>
+      </section>
+      <!-- Slide 33: Connectors and skills -->
+      <section class="slide" aria-label="Slide 33 of 66" data-notes="&quot;For our AI, connectors are the tools. Skills are the recipes. A connector lets AI talk to your applications: Gmail, Slack, Drive, Asana.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>NEW WORDS</p><h2 class="reveal" data-editable>Connectors = the tools. Skills = the <span class="marker">recipes</span>.</h2><p class="support reveal" data-editable>A connector lets AI talk to your apps: Gmail, Slack, Drive, Asana.</p></div></div><div class="intl-watermark" aria-hidden="true">33</div>
+      </section>
+      <!-- Slide 34: MCP -->
+      <section class="slide" aria-label="Slide 34 of 66" data-notes="&quot;MCP, Model Context Protocol, is the standard way these connections work. Think of it as one plug that fits many apps. You do not need to build anything today. You need to know what a connection can see and what it can do.&quot;
+
+Show the connector controls in the account.">
+        <div class="slide-inner statement-layout  has-icon">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>NEW WORD</p><h2 class="reveal" data-editable>MCP = one plug that fits <span class="marker">many apps</span></h2><p class="support reveal" data-editable>Model Context Protocol. You will not build anything today.</p></div><div class="intl-icon-tile reveal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v5M15 2v5"/><path d="M6 7h12v4a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></svg></div></div><div class="intl-watermark" aria-hidden="true">34</div>
+      </section>
+      <!-- Slide 35: Is it safe -->
+      <section class="slide" aria-label="Slide 35 of 66" data-notes="&quot;Now, is it safe to connect?&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Is it safe to connect <span class="marker">your apps</span>?</h2></div></div><div class="intl-watermark" aria-hidden="true">35</div>
+      </section>
+      <!-- Slide 36: Library card -->
+      <section class="slide" aria-label="Slide 36 of 66" data-notes="&quot;Think of it like getting access to a library. A library card does not mean you read all the thousands of books. You ask for one book. The librarian checks. Can you take it home, or only read it there? Some books are only for lecturers, not students. If you touch a book that is locked for you, the librarian stops you right there.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>ANALOGY</p><h2 class="reveal" data-editable>A library card does not mean you read every book. The librarian checks <span class="marker">each one</span>.</h2><p class="support reveal" data-editable>Some books are only for lecturers, not students.</p></div></div><div class="intl-watermark" aria-hidden="true">36</div>
+      </section>
+      <!-- Slide 37: Read and write -->
+      <section class="slide" aria-label="Slide 37 of 66" data-notes="&quot;Connectors work the same way. When you start, approve each action yourself. Use it once, twice, thrice. Get confidence. Then slowly allow reads. Keep write access in your control.&quot;
+
+Open the connector&#x27;s permissions screen. Point to read access and the actions that need approval.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>PERMISSIONS</p><h2 class="reveal" data-editable>Approve each action yourself at first. Allow reads slowly. Keep <span class="marker">write access</span> in your control.</h2></div></div><div class="intl-watermark" aria-hidden="true">37</div>
+      </section>
+      <!-- Slide 38: Instructions inside content -->
+      <section class="slide" aria-label="Slide 38 of 66" data-notes="&quot;One more thing. If an email or a web page has instructions written inside it, that is content, not your instruction. AI should not act on it.&quot;
+
+DEMO, on your screen, not on a slide: Retrieve one week of team updates from one channel with the retrieval prompt (script 2.3). Open one source item. Check the brief did not add a decision or an owner. While it runs, say: &quot;I will start small. One channel, one week. I want a brief my team lead can use, with a link back to each message. Then we open one message and check.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Treat any instruction written inside an email or a web page as <span class="marker">content</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">38</div>
+      </section>
+      <!-- Slide 39: When to build a skill -->
+      <section class="slide" aria-label="Slide 39 of 66" data-notes="&quot;Now, when do you build a skill?&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>So when should you <span class="marker">build a skill</span>?</h2></div></div><div class="intl-watermark" aria-hidden="true">39</div>
+      </section>
+      <!-- Slide 40: Brief vs skill -->
+      <section class="slide" aria-label="Slide 40 of 66" data-notes="&quot;If it is a one-time task, a brief is enough. Somebody walks into your restaurant and wants a special dish. You do not write a recipe for that. You just make it. When you do the same task 3 to 4 times, the process becomes clear. That is when you say, build me the skill.&quot;
+
+None.">
+        <div class="slide-inner compare-layout"><p class="eyebrow reveal" data-editable>BRIEF OR SKILL</p>
+  <div class="compare"><article class="col col--old reveal"><p class="col-k" data-editable>One-time task</p><p class="col-v" data-editable>a brief is enough</p></article><article class="col col--new reveal"><p class="col-k" data-editable>Same task 3 to 4 times</p><p class="col-v" data-editable><span class="marker">build the skill</span></p></article></div></div>
+      </section>
+      <!-- Slide 41: Explain and defend -->
+      <section class="slide" aria-label="Slide 41 of 66" data-notes="&quot;Cranmer adds one test I like. Can you explain and defend the output without the AI? Can you find its mistakes? If yes, delegate freely. When I built my newsletter digest skill, the first run picked old issues and gave me two separate decks. That feedback went into the skill, not into the chat.&quot;
+
+VISHWAS: Tell the newsletter digest story as Dileep&#x27;s example: &quot;Here is an example from Dileep&#x27;s own setup.&quot;
+
+DEMO, on your screen, not on a slide: Save the process as Team Update Brief with the skill prompt (script 2.4). Start a fresh request and select the skill by name. If it cannot be saved, paste the instructions and call it manual use. While it runs, say: &quot;Today I will save this after one run so you can see how. In your own work, run it 3 to 4 times first.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Can you explain and defend the output <span class="marker">without the AI</span>? Then delegate.</h2></div><p class="source reveal" data-editable>Source: Miles Cranmer, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">41</div>
+      </section>
+      <!-- Slide 42: Behind a login -->
+      <section class="slide" aria-label="Slide 42 of 66" data-notes="&quot;Some work sits behind a login. When I am signed in, I can read it. But a normal AI search only sees the public preview. Same library rule as before. It uses my login, so it can see what I can see.&quot;
+
+DEMO, on your screen, not on a slide: Run the reading prompt on your signed-in site (script 3.2). Read only. Open one link and check the date. Run a small repeat and show it skips the logged article. If access fails for 2 minutes, show the recording and go to the break. While it runs, say: &quot;Topic, dates, at most two articles. A useful point from each and a link I can check. And a reading log, so the next run knows what is already done.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Some of your best sources sit <span class="marker">behind a login</span>.</h2><p class="support reveal" data-editable>A normal AI search only sees the public preview.</p></div></div><div class="intl-watermark" aria-hidden="true">42</div>
+      </section>
+      <!-- Slide 43: Break -->
+      <section class="slide" aria-label="Slide 43 of 66" data-notes="&quot;Five minutes. When we come back, we use skills for two kinds of work: content and data.&quot;
+
+Have the voice skill, Outskill Slides and the agent environment open before resuming.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>BREAK</p><h2 class="reveal" data-editable>Quick 5 minute break. When we come back, <span class="marker">content and data</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">43</div>
+      </section>
+      <!-- Slide 44: Do not build every skill -->
+      <section class="slide" aria-label="Slide 44 of 66" data-notes="&quot;So far we made our own skill. But you do not have to make every skill yourself.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You do not have to build every skill <span class="marker">yourself</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">44</div>
+      </section>
+      <!-- Slide 45: skills.sh -->
+      <section class="slide" aria-label="Slide 45 of 66" data-notes="&quot;There is a directory called skills.sh with a lot of skills people have already built and shared. Today I will show you only a few. We will come back to skills in later sessions: how to pick them, how to adapt them, how to build your own properly.&quot;
+
+Open skills.sh and scroll for a few seconds.">
+        <div class="slide-inner statement-layout tool ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>skills.sh</h2><p class="support reveal" data-editable>A directory of skills people have built and shared. We look at a few today and come back to skills later.</p></div></div><div class="intl-watermark" aria-hidden="true">45</div>
+      </section>
+      <!-- Slide 46: Installing a skill -->
+      <section class="slide" aria-label="Slide 46 of 66" data-notes="&quot;Installing one can be as simple as this. Copy the link, paste it into your agent, and say &quot;Install this skill.&quot; That is it.&quot;
+
+Paste the install line in the prepared agent environment and show the skill appear. Install it before class too.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>HOW TO INSTALL</p><h2 class="reveal" data-editable>Installing a skill = paste the link and say "<span class="marker">Install this skill</span>"</h2><p class="support reveal" data-editable>Install this skill: github.com/petergyang/no-ai-slop</p></div></div><div class="intl-watermark" aria-hidden="true">46</div>
+      </section>
+      <!-- Slide 47: Sound like you -->
+      <section class="slide" aria-label="Slide 47 of 66" data-notes="&quot;Now I want the writing to sound like me.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You want everything you write with AI to <span class="marker">sound like you</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">47</div>
+      </section>
+      <!-- Slide 48: From sent email -->
+      <section class="slide" aria-label="Slide 48 of 66" data-notes="&quot;I have already built a skill for that. I connected Gmail, the same way we connected an app earlier, and asked it to read my sent emails, only the ones I wrote, and find how I write. If you do not want to connect your email, your custom instructions from this morning are a good place to start.&quot;
+
+VISHWAS: Use your own voice skill and your own email or instructions.
+
+Show the Gmail prompt. Do not run it on your real inbox. The screen would show private emails.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>MY VOICE SKILL</p><h2 class="reveal" data-editable>I built mine by letting AI read <span class="marker">my sent emails</span>.</h2><p class="support reveal" data-editable>No email? Start from your custom instructions.</p></div></div><div class="intl-watermark" aria-hidden="true">48</div>
+      </section>
+      <!-- Slide 49: Voice profile -->
+      <section class="slide" aria-label="Slide 49 of 66" data-notes="&quot;How I open, how I explain a decision, how I close, which words I use and which I never use. I read the first version before saving. Where it got me wrong, I corrected it. Always read the profile before you save it.&quot;
+
+DEMO, on your screen, not on a slide: Open your prepared voice profile. Read two lines aloud with the email line behind each. Point to one real correction.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>How I open, how I explain, how I close, and the words I <span class="marker">never use</span></h2></div></div><div class="intl-watermark" aria-hidden="true">49</div>
+      </section>
+      <!-- Slide 50: A file you can correct -->
+      <section class="slide" aria-label="Slide 50 of 66" data-notes="&quot;ChatGPT also has its own writing-style setting that learns from your connected apps. It does a similar job. The difference is that a skill is a file you can open, read and correct.&quot;
+
+Show where the writing-style setting sits and say the path aloud.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>A skill is a file you can <span class="marker">open, read and correct</span>.</h2><p class="support reveal" data-editable>ChatGPT also has a writing-style setting. It does a similar job.</p></div></div><div class="intl-watermark" aria-hidden="true">50</div>
+      </section>
+      <!-- Slide 51: Reads like AI -->
+      <section class="slide" aria-label="Slide 51 of 66" data-notes="&quot;I will draft the invitation and the slide copy with my voice skill. But even a good draft can read like AI wrote it.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Your draft is fine, but it <span class="marker">reads like AI</span> wrote it.</h2></div></div><div class="intl-watermark" aria-hidden="true">51</div>
+      </section>
+      <!-- Slide 52: no-ai-slop -->
+      <section class="slide" aria-label="Slide 52 of 66" data-notes="&quot;So I run Peter Yang&#x27;s no-ai-slop skill on it. I want to see what it changes. If it cuts something useful or makes it sound less like me, I put that back.&quot;
+
+DEMO, on your screen, not on a slide: Draft the Outskill office-hour invitation with your voice skill, then edit it with no-ai-slop (script 4.3). Compare one passage before and after.">
+        <div class="slide-inner statement-layout tool ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>no-ai-slop</h2><p class="meta reveal" data-editable>Peter Yang · github.com/petergyang/no-ai-slop</p></div></div><div class="intl-watermark" aria-hidden="true">52</div>
+      </section>
+      <!-- Slide 53: Callback -->
+      <section class="slide" aria-label="Slide 53 of 66" data-notes="&quot;Remember Cranmer&#x27;s point about every presentation looking the same? This is how we avoid it.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Remember? Every presentation was starting to <span class="marker">look the same</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">53</div>
+      </section>
+      <!-- Slide 54: Good slides, no brand -->
+      <section class="slide" aria-label="Slide 54 of 66" data-notes="&quot;This is Zara Zhang&#x27;s frontend-slides skill. It makes good HTML slides. But it does not know our brand.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>frontend-slides makes good slides. It <span class="marker">does not know your brand</span>.</h2></div><p class="source reveal" data-editable>Source: Zara Zhang, github.com/zarazhangrui/frontend-slides</p></div><div class="intl-watermark" aria-hidden="true">54</div>
+      </section>
+      <!-- Slide 55: Outskill Slides -->
+      <section class="slide" aria-label="Slide 55 of 66" data-notes="&quot;So I combined two things: the skill and the Outskill website. I pasted the skill link, I pasted the website, and I asked it to combine them in whatever way works. That is all it took.&quot;
+
+Show the frontend-slides repo, outskill.com and the prompt. Do not run it.
+
+DEMO, on your screen, not on a slide: Open the installed Outskill Slides skill (outskill-frontend-slides). Check one colour against outskill.com. Build the three-slide deck from the edited copy and click through all three. Keep a prepared deck ready. While it runs, say: &quot;To save time, I made this before the session. Here is the skill it created. Adapting skills properly, with full brand guidelines, we will take up in a later session. For now, let me use it.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><p class="eyebrow reveal" data-editable>HOW I MADE IT</p><h2 class="reveal" data-editable>frontend-slides + outskill.com = <span class="marker">Outskill Slides</span></h2><p class="support reveal" data-editable>Paste the skill link, paste the website, ask it to combine them.</p></div></div><div class="intl-watermark" aria-hidden="true">55</div>
+      </section>
+      <!-- Slide 56: Review problem -->
+      <section class="slide" aria-label="Slide 56 of 66" data-notes="&quot;Now I review the deck like I would review my team&#x27;s work. I change one line directly and leave a comment on something that needs work.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>You want to fix one line, leave one comment, and let AI <span class="marker">apply both</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">56</div>
+      </section>
+      <!-- Slide 57: human-review -->
+      <section class="slide" aria-label="Slide 57 of 66" data-notes="&quot;Then I send it back. The agent has to keep my exact edit and apply the comment to the source, so the change survives the next build.&quot;
+
+DEMO, on your screen, not on a slide: Open the deck in human-review. Make one edit and one comment, select Send, apply the batch, reload and show the change (script 4.5).">
+        <div class="slide-inner statement-layout tool ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>human-review</h2><p class="meta reveal" data-editable>Peter Yang · github.com/petergyang/human-review</p></div></div><div class="intl-watermark" aria-hidden="true">57</div>
+      </section>
+      <!-- Slide 58: Support scenario -->
+      <section class="slide" aria-label="Slide 58 of 66" data-notes="&quot;Same rule as the business review. Start from the decision. The team lead wants to know where requests are piling up and where they take longer.&quot;
+
+The data is fictional.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Your support team lead wants to know where requests are <span class="marker">piling up</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">58</div>
+      </section>
+      <!-- Slide 59: Open the file first -->
+      <section class="slide" aria-label="Slide 59 of 66" data-notes="&quot;Before any chart, I open the file. What is one row? Which period? What does &quot;resolved&quot; mean? These decide the calculations.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Before any chart, <span class="marker">open the file</span>.</h2><p class="support reveal" data-editable>What is one row? Which period? What does "resolved" mean?</p></div></div><div class="intl-watermark" aria-hidden="true">59</div>
+      </section>
+      <!-- Slide 60: Inspect and clean -->
+      <section class="slide" aria-label="Slide 60 of 66" data-notes="&quot;I check what it wants to change. A duplicate ticket ID needs a look. A blank resolved time may just mean the ticket is still open. We should not fill it with an average to make the column look complete.&quot;
+
+DEMO, on your screen, not on a slide: Run the inspect prompt, then the cleaning prompt (script 5.1 and 5.2). Check each metric is supported by the workbook.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>A blank resolved time may just mean the ticket is <span class="marker">still open</span></h2></div></div><div class="intl-watermark" aria-hidden="true">60</div>
+      </section>
+      <!-- Slide 61: Chart not essay -->
+      <section class="slide" aria-label="Slide 61 of 66" data-notes="&quot;Before the dashboard, I check. Cranmer has a habit I like. He does not read the long explanation. He asks for a plot, because you can see a problem in a chart much faster than in an essay.&quot;
+
+Run the chart prompt. Look for anything odd before moving on.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>Ask AI to show you a <span class="marker">chart</span> before you trust the result.</h2><p class="support reveal" data-editable>You spot a problem in a chart faster than in a long explanation.</p></div><p class="source reveal" data-editable>Source: Miles Cranmer, 16 Oct 2026</p></div><div class="intl-watermark" aria-hidden="true">61</div>
+      </section>
+      <!-- Slide 62: Not a check -->
+      <section class="slide" aria-label="Slide 62 of 66" data-notes="&quot;The skill saying it checked the data is not a check. I just checked it.&quot;
+
+Reproduce one count from the source rows against the answer sheet. If they disagree, find out why.
+
+DEMO, on your screen, not on a slide: Build the dashboard with the Outskill brand rules (script 5.4). Check one brand colour, use one filter and reset it. While it runs, say: &quot;The dashboard should help the lead decide where to look next. And I use the same Outskill brand skill. I built it for slides, but the colours, fonts and logo inside it work for a dashboard too.&quot;">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>The skill saying it checked the data <span class="marker">is not a check</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">62</div>
+      </section>
+      <!-- Slide 63: One brand -->
+      <section class="slide" aria-label="Slide 63 of 66" data-notes="&quot;So everything we make today looks like Outskill, not like default AI.&quot;
+
+None.">
+        <div class="slide-inner statement-layout  ">
+  <div class="statement-copy"><h2 class="reveal" data-editable>One brand skill made both the deck and the dashboard <span class="marker">look like Outskill</span>.</h2></div></div><div class="intl-watermark" aria-hidden="true">63</div>
+      </section>
+      <!-- Slide 64: Recap -->
+      <section class="slide" aria-label="Slide 64 of 66" data-notes="&quot;Let me put everything back on screen. The business review, where we checked a conclusion against the figures. The team brief, where we opened a source message. The site behind a login, where we checked an article and the log. The deck, where my edit survived the reload. The dashboard, where we matched a count to the source rows.&quot;
+
+None.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>QUICK SUMMARY</p><h2 class="reveal" data-editable>Quick summary of <span class="marker">everything we did</span> today</h2>
+  <ul class="rows"><li class="row row--plain reveal"><span class="row-v" data-editable>Checked a business review against the figures</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Opened a source message behind a team brief</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Read behind a login and checked the log</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Edited a deck and saw the change survive a reload</span></li><li class="row row--plain reveal"><span class="row-v" data-editable>Matched a dashboard count to the source rows</span></li></ul></div><div class="intl-watermark" aria-hidden="true">64</div>
+      </section>
+      <!-- Slide 65: Four words to keep -->
+      <section class="slide" aria-label="Slide 65 of 66" data-notes="&quot;Your personal instructions hold what stays true about you. A voice profile holds how you write. A skill is a recipe for a type of work. A connector is a tool that gives access.&quot;
+
+None.">
+        <div class="slide-inner list-layout"><p class="eyebrow reveal" data-editable>WHAT IS WHAT</p><h2 class="reveal" data-editable>Four words you will hear <span class="marker">all 14 days</span></h2>
+  <ul class="rows"><li class="row reveal"><span class="row-k" data-editable>Instructions</span><span class="row-v" data-editable>what stays true about you</span></li><li class="row reveal"><span class="row-k" data-editable>Voice profile</span><span class="row-v" data-editable>how you write</span></li><li class="row reveal"><span class="row-k" data-editable>Skill</span><span class="row-v" data-editable>a recipe for one type of work</span></li><li class="row reveal"><span class="row-k" data-editable>Connector</span><span class="row-v" data-editable>a tool that gives AI access</span></li></ul></div><div class="intl-watermark" aria-hidden="true">65</div>
+      </section>
+      <!-- Slide 66: Close -->
+      <section class="slide" aria-label="Slide 66 of 66" data-notes="&quot;Keep the correction you made today. If it applies again, put it into your instructions or your skill, then try it on another input. The team will now brief you on the breakout.&quot;
+
+Hand over to the team for the breakout brief.">
+        <div class="slide-inner closing-layout">
+  <img class="brand-lockup reveal" src="outskill-logo.svg" alt="Outskill">
+  <h2 class="reveal" data-editable>Keep the correction you made today. Put it in your instructions or your skill, and <span class="marker">try it again</span>.</h2></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="deck-controls" aria-label="Presentation controls">
+    <button id="previousSlide" type="button" aria-label="Previous slide">←</button>
+    <span class="page-indicator" id="pageIndicator">1 / 66</span>
+    <button id="nextSlide" type="button" aria-label="Next slide">→</button>
+  </div>
+
+  <div class="notes-panel" id="notesPanel" aria-live="polite"></div>
+
+  <div class="edit-hotzone" id="editHotzone" title="Edit mode (E)"></div>
+  <button class="edit-toggle" id="editToggle" type="button" aria-label="Toggle edit mode">✎</button>
+
+  <script>
+    /* =========================================================
+       FIXED-STAGE PRESENTATION CONTROLLER
+       ========================================================= */
+    class OutskillDeck {
+      constructor() {
+        this.stage = document.getElementById("deckStage");
+        this.slides = Array.from(document.querySelectorAll(".slide"));
+        this.pageIndicator = document.getElementById("pageIndicator");
+        this.progress = document.getElementById("deckProgress");
+        this.current = this.readInitialSlide();
+        this.touchStartX = null;
+        this.wheelLocked = false;
+
+        this.scaleStage();
+        this.bindNavigation();
+        this.show(this.current, false);
+        window.addEventListener("resize", () => this.scaleStage());
+      }
+
+      readInitialSlide() {
+        const hashIndex = Number.parseInt(window.location.hash.replace("#slide-", ""), 10) - 1;
+        return Number.isInteger(hashIndex) && hashIndex >= 0 ? Math.min(hashIndex, this.slides.length - 1) : 0;
+      }
+
+      scaleStage() {
+        const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        const x = (window.innerWidth - 1920 * factor) / 2;
+        const y = (window.innerHeight - 1080 * factor) / 2;
+        this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+      }
+
+      show(index, updateHash = true) {
+        this.current = Math.max(0, Math.min(index, this.slides.length - 1));
+        this.slides.forEach((slide, slideIndex) => {
+          const isCurrent = slideIndex === this.current;
+          slide.classList.toggle("active", isCurrent);
+          slide.classList.toggle("visible", isCurrent);
+          slide.setAttribute("aria-hidden", String(!isCurrent));
+        });
+
+        this.pageIndicator.textContent = `${this.current + 1} / ${this.slides.length}`;
+        this.progress.style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+        if (updateHash) history.replaceState(null, "", `#slide-${this.current + 1}`);
+      }
+
+      previous() { this.show(this.current - 1); }
+      next() { this.show(this.current + 1); }
+
+      bindNavigation() {
+        document.getElementById("previousSlide").addEventListener("click", () => this.previous());
+        document.getElementById("nextSlide").addEventListener("click", () => this.next());
+
+        document.addEventListener("keydown", (event) => {
+          if (event.target.closest("[contenteditable='true']")) return;
+
+          if (["ArrowLeft", "ArrowUp", "PageUp"].includes(event.key)) {
+            event.preventDefault();
+            this.previous();
+          }
+
+          if (["ArrowRight", "ArrowDown", "PageDown", " "].includes(event.key)) {
+            event.preventDefault();
+            this.next();
+          }
+
+          if (event.key === "Home") this.show(0);
+          if (event.key === "End") this.show(this.slides.length - 1);
+          if (event.key.toLowerCase() === "f") this.toggleFullscreen();
+        });
+
+        document.addEventListener("wheel", (event) => {
+          if (this.wheelLocked || Math.abs(event.deltaY) < 24) return;
+          this.wheelLocked = true;
+          event.deltaY > 0 ? this.next() : this.previous();
+          window.setTimeout(() => { this.wheelLocked = false; }, 650);
+        }, { passive: true });
+
+        document.addEventListener("touchstart", (event) => {
+          this.touchStartX = event.changedTouches[0].clientX;
+        }, { passive: true });
+
+        document.addEventListener("touchend", (event) => {
+          if (this.touchStartX === null) return;
+          const distance = event.changedTouches[0].clientX - this.touchStartX;
+          if (Math.abs(distance) > 48) distance < 0 ? this.next() : this.previous();
+          this.touchStartX = null;
+        }, { passive: true });
+      }
+
+      async toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen?.();
+        } else {
+          await document.exitFullscreen?.();
+        }
+      }
+    }
+
+    /* =========================================================
+       LIGHTWEIGHT INLINE EDITOR
+       ========================================================= */
+    class DeckEditor {
+      constructor() {
+        this.isActive = false;
+        this.editables = Array.from(document.querySelectorAll("[data-editable]"));
+        this.storageKey = `${document.body.dataset.deckKey || "outskill-deck"}:edits`;
+        this.restore();
+        this.editables.forEach((element) => element.addEventListener("input", () => this.save()));
+        this.bindToggle();
+      }
+
+      bindToggle() {
+        const hotzone = document.getElementById("editHotzone");
+        const toggle = document.getElementById("editToggle");
+        let hideTimeout = null;
+
+        const showToggle = () => {
+          window.clearTimeout(hideTimeout);
+          toggle.classList.add("show");
+        };
+
+        const scheduleHide = () => {
+          hideTimeout = window.setTimeout(() => {
+            if (!this.isActive) toggle.classList.remove("show");
+          }, 400);
+        };
+
+        hotzone.addEventListener("mouseenter", showToggle);
+        hotzone.addEventListener("mouseleave", scheduleHide);
+        toggle.addEventListener("mouseenter", showToggle);
+        toggle.addEventListener("mouseleave", scheduleHide);
+        hotzone.addEventListener("click", () => this.toggle(toggle));
+        toggle.addEventListener("click", () => this.toggle(toggle));
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key.toLowerCase() === "e" && !event.target.closest("[contenteditable='true']")) {
+            this.toggle(toggle);
+          }
+        });
+      }
+
+      toggle(button) {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle("editing", this.isActive);
+        button.classList.toggle("active", this.isActive);
+        button.classList.toggle("show", this.isActive);
+
+        this.editables.forEach((element) => {
+          element.contentEditable = String(this.isActive);
+        });
+
+        if (!this.isActive) this.save();
+      }
+
+      save() {
+        const edits = this.editables.map((element) => element.innerHTML);
+        localStorage.setItem(this.storageKey, JSON.stringify(edits));
+      }
+
+      restore() {
+        try {
+          const edits = JSON.parse(localStorage.getItem(this.storageKey));
+          if (!Array.isArray(edits)) return;
+          this.editables.forEach((element, index) => {
+            if (typeof edits[index] === "string") element.innerHTML = edits[index];
+          });
+        } catch (error) {
+          console.warn("Could not restore saved slide edits.", error);
+        }
+      }
+    }
+
+    const deck = new OutskillDeck();
+    const editor = new DeckEditor();
+    window.outskillDeck = deck;
+    window.outskillDeckEditor = editor;
+
+    /* =========================================================
+       PRESENTER NOTES (N toggles the panel)
+       ========================================================= */
+    (function () {
+      const panel = document.getElementById("notesPanel");
+      const render = () => {
+        const s = document.querySelector(".slide.active");
+        panel.textContent = s ? (s.getAttribute("data-notes") || "") : "";
+      };
+      const origShow = deck.show.bind(deck);
+      deck.show = (i, u) => { origShow(i, u); render(); };
+      document.addEventListener("keydown", (e) => {
+        if (e.target.closest("[contenteditable='true']")) return;
+        if (e.key.toLowerCase() === "n") { panel.classList.toggle("show"); render(); }
+      });
+      render();
+    })();
+  </script>
+</body>
+</html>
